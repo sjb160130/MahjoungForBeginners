@@ -188,6 +188,7 @@ function getTooltipForRecommendation(recommendation) {
   const alias = tooltipAliases.find(([text]) => recommendation.includes(text));
   const name = alias ? alias[1] : recommendation.split(" hint:")[0];
   return (
+    yakuTooltips.find((tooltip) => tooltip.name === name) ||
     yakuTooltips.find((tooltip) => tooltip.name.startsWith(`${name} (`)) ||
     yakuTooltips.find((tooltip) =>
       recommendation.includes(tooltip.name.split(" (")[0]),
@@ -199,7 +200,7 @@ function renderRecommendation(recommendation) {
   const tooltip = getTooltipForRecommendation(recommendation);
   if (!tooltip) return `<br>- ${recommendation}`;
 
-  return `<br>- <span title="${tooltip.hint}">${tooltip.name}</span>`;
+  return `<br>- <span title="${tooltip.hint}">${tooltip.name} : ${tooltip.condition}</span>`;
 }
 
 // Parse input, calculate shanten, and render results
@@ -290,7 +291,8 @@ function analyzeHand() {
            Shanten:${shanten}`;
     document.getElementById("handSummaryText").textContent = hand;
     document.getElementById("tileCount").textContent = tilesArray.length;
-    setDrawerCollapsed(true);
+    // Keep desktop controls visible; compact the drawer only on mobile.
+    setDrawerCollapsed(window.matchMedia("(max-width: 700px)").matches);
   } catch (err) {
     document.getElementById("output").innerHTML =
       "Calculation Error: " + err.message;
@@ -390,6 +392,7 @@ function clearHand() {
   tileHand.length = 0;
   createBtns("Remove", handContainer, tileHand);
   document.getElementById("handInput").value = "";
+  document.getElementById("HandCheck").checked = false;
   refreshHandSummary();
   console.log("Hand Cleared");
 }
@@ -496,11 +499,12 @@ fetch("./yakuTooltips.json")
   })
   .then((tooltips) => {
     const formattedTooltips = tooltips.map(({ name, condition, hint }) => ({
-      name: `${name} (${condition})`,
+      name,
+      condition,
       hint,
     }));
-    const riichiTooltip = formattedTooltips.find((tooltip) =>
-      tooltip.name.startsWith("Riichi ("),
+    const riichiTooltip = formattedTooltips.find(
+      (tooltip) => tooltip.name === "Riichi",
     );
     const otherTooltips = formattedTooltips.filter(
       (tooltip) => tooltip !== riichiTooltip,
