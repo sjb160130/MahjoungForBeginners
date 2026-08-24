@@ -383,6 +383,7 @@ function refreshHandSummary() {
 
   document.getElementById("handSummaryText").textContent = handText;
   document.getElementById("tileCount").textContent = formattedArray.length;
+  if (typeof fixOverlap === "function") fixOverlap();
 }
 
 function addTileString(tile) {
@@ -488,6 +489,7 @@ function setDrawerCollapsed(isCollapsed) {
   toggleButton.setAttribute("aria-label", `${action} hand menu`);
   toggleButton.title = `${action} hand menu`;
   toggleButton.setAttribute("aria-expanded", String(!isCollapsed));
+  if (typeof fixOverlap === "function") fixOverlap();
 }
 
 if (toggleButton) {
@@ -497,15 +499,23 @@ if (toggleButton) {
 }
 
 const floatingDiv = document.querySelector(".handDrawer");
-const tabPanels = document.querySelectorAll(".tabcontent");
+const builderPanel = document.getElementById("RichiYakuBuilder");
 
-// Reserve space in every tab for the fixed drawer when it is open.
+// Reserve only the space where the fixed drawer overlaps builder content.
 function fixOverlap() {
-  if (floatingDiv) {
-    const drawerHeight = `${floatingDiv.offsetHeight}px`;
-    tabPanels.forEach((panel) => {
-      panel.style.marginBottom = drawerHeight;
-    });
+  if (floatingDiv && builderPanel) {
+    const drawerStyle = getComputedStyle(floatingDiv);
+    if (drawerStyle.display === "none") {
+      builderPanel.style.marginBottom = "0px";
+      return;
+    }
+
+    const overlap = Math.max(
+      0,
+      builderPanel.getBoundingClientRect().bottom -
+        floatingDiv.getBoundingClientRect().top,
+    );
+    builderPanel.style.marginBottom = `${overlap}px`;
   }
 }
 fixOverlap();

@@ -12,6 +12,11 @@ function openTab(evt, tabName) {
 
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.className += " active";
+  document.body.classList.toggle(
+    "reference-tab-active",
+    tabName === "BasicRules" || tabName === "YakuReference",
+  );
+  if (typeof fixOverlap === "function") fixOverlap();
 }
 
 function toggleTab() {

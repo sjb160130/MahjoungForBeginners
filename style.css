@@ -123,6 +123,25 @@ input:focus-visible {
   background: rgba(16, 23, 25, 0.58);
 }
 
+/* Keep large rules sheets readable without letting them dominate the page. */
+#BasicRules > img {
+  display: block;
+  width: auto !important;
+  max-width: 100%;
+  height: auto;
+  max-height: 70vh;
+  margin: 0 auto 20px;
+  object-fit: contain;
+}
+
+#BasicRules p {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .trainer-card {
   max-width: 900px;
   margin: 0 auto;
@@ -297,6 +316,11 @@ input:focus-visible {
 
 .handDrawer.collapsed #sort,
 .handDrawer.collapsed #backspaceBtn {
+  display: none;
+}
+
+/* Reference tabs do not need hand-entry controls. */
+body.reference-tab-active .handDrawer {
   display: none;
 }
 
