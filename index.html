@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="./style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pen</title>
+  </head>
+  <body>
+    <h2>RICHI MAHJOUNG BEGINNER CHEAT SHEET</h2>
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'RichiYakuBuilder')">
+        Richi Yaku Builder
+      </button>
+      <button class="tablinks" onclick="openTab(event, 'BasicRules')">
+        Basic Rules
+      </button>
+    </div>
+
+    <div id="RichiYakuBuilder" class="tabcontent">
+      <div class="trainer-card">
+        <div class="card-header">
+          <h3>🀄 Riichi Mahjong Builder</h3>
+          Shows you most possible hands that you are close to buildling and give
+          pointers on how.
+          <br />
+
+          <div id="BasicRules" class="tabcontent">
+            <img
+              src="https://files.catbox.moe/f7ez3a.webp"
+              style="width: 100%"
+            />
+            <img
+              src="https://res.cloudinary.com/djvg6ubiy/image/upload/v1697656171/Longhorn%20Riichi/Finished%20Promo%20Products/Yaku_Sheet_With_Calls_Front_fg0t7j.png"
+              style="width: 100%"
+            />
+            <img
+              src="https://files.catbox.moe/e4ve4a.jpg"
+              style="width: 100%"
+            />
+            <p>
+              Ref Sources:
+              <br />
+              https://www.reddit.com/r/Mahjong/comments/l5b221/riichi_mahjong_cheat_sheet_1_page_pdf_or_images/
+              <br />
+              https://www.reddit.com/r/Mahjong/comments/l5b221/riichi_mahjong_cheat_sheet_1_page_pdf_or_images/
+              <br />
+              https://boardgamegeek.com/image/5957879/riichi-mahjong and
+              https://peterish.com/portfolio/general-riichi-designs/
+            </p>
+            <br />
+          </div>
+
+          <div>
+            <div class="input-group">
+              <div id="typeTab">
+                <br />
+                Type to Input Hand
+                <br />
+                <input
+                  type="text"
+                  id="handInput"
+                  placeholder="e.g., 1122334455667s"
+                  value="1122334455667s"
+                />
+                <p>
+                  Suited Tiles: m = Manzu,s = Souzu, p = Pinzu
+                  <br />
+                  Winds: 1z = East, 2z = South, 4z = West, 5z = North
+                  <br />
+                  Dragons:5z - 7z, 5z = White, 6z = Green, 7z = Red
+                  <br />
+                  Sample Hand: 1234m555s9672p57z or 1122334455667s
+                </p>
+              </div>
+            </div>
+
+            <div id="tapTab">
+              <div class="handContainer" id="handHolder">
+                Hand:
+                <label id="handValueLabel">Hand Value</label>
+                <div
+                  id="handTileHere"
+                  class="button-container handHolder"
+                ></div>
+                <div id="currentHand" class="handContainer handHolder">
+                  Tap Tiles to Input Hand
+                  <div id="button-container" class="button-container"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br />
+          <div class="handDrawerHeader">
+            <div class="drawerTitle">
+              🀄 Current Hand (
+              <span id="tileCount">0</span>
+              /13)
+            </div>
+            <div class="drawerButtons">
+              <input
+                type="checkbox"
+                id="HandCheck"
+                name="HandCheck"
+                value="False"
+              />
+              Open Hand?
+              <input
+                type="checkbox"
+                id="typeCheck"
+                name="typeCheck"
+                value="False"
+              />
+              Input by typing
+              <button
+                id="analyzeBtn"
+                onclick="openTab(event, 'RichiYakuBuilder')"
+              >
+                Analyze Hand
+              </button>
+              <button id="sort">Sort</button>
+              <button id="clearHand">Clear</button>
+              <button id="backspaceBtn">Backspace</button>
+            </div>
+          </div>
+          <br />
+          <label for="handInput">Enter Your 13-Tile Hand</label>
+        </div>
+
+        <div class="card-body">
+          <div id="output" class="handHolder">
+            <div class="empty-state">
+              Results will appear here after analysis.
+            </div>
+          </div>
+          <br />
+          <button onclick="toggleTab()">More Info</button>
+          <div id="VariableInfo">
+            <div class="empty-state">Hand Specifics will be here</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="./script.js"></script>
+  </body>
+</html>
