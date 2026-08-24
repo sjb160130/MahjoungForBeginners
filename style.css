@@ -21,6 +21,11 @@
 html {
   min-width: 320px;
   background: var(--bg);
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -28,14 +33,18 @@ body {
   margin: 0;
   padding: 28px 24px 32px;
   color: var(--text);
-  background:
-    radial-gradient(
-      circle at 12% 0%,
-      rgba(113, 209, 177, 0.11),
-      transparent 32rem
-    ),
-    linear-gradient(145deg, #101719 0%, #142022 52%, #0e1416 100%);
+  background: linear-gradient(145deg, #101719 0%, #142022 52%, #0e1416 100%);
   font-family: Georgia, "Times New Roman", serif;
+  scrollbar-width: none;
+}
+
+body::-webkit-scrollbar,
+.handDrawerContent::-webkit-scrollbar {
+  display: none;
+}
+
+.handDrawerContent {
+  scrollbar-width: none;
 }
 
 body > h2 {
@@ -151,6 +160,30 @@ input:focus-visible {
   background: var(--surface);
 }
 
+.yakuRecommendation {
+  margin: 0 0 14px;
+  padding-left: 4px;
+  line-height: 1.5;
+}
+
+.yakuRecommendation strong {
+  color: var(--accent-strong);
+}
+
+.yakuRecommendation div {
+  color: var(--muted);
+}
+
+.yakuReferenceList {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#YakuReference h3 {
+  margin-top: 0;
+  color: var(--accent-strong);
+}
+
 .empty-state {
   color: var(--muted);
   font-style: italic;
@@ -213,6 +246,7 @@ input:focus-visible {
   gap: 14px;
   padding: 10px max(18px, calc((100vw - 1100px) / 2));
   background: var(--surface-raised);
+  position: relative;
 }
 
 .drawerHandSummary {
@@ -274,6 +308,22 @@ input:focus-visible {
   background: var(--surface-soft);
 }
 
+.drawerToggle {
+  position: absolute;
+  top: 10px;
+  right: max(18px, calc((100vw - 1100px) / 2));
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  line-height: 1;
+}
+
+.drawerButtons button,
+.card-body > button {
+  position: static;
+}
+
 .drawerToggle:hover,
 .drawerButtons button:hover,
 .card-body > button:hover {
@@ -300,7 +350,8 @@ input:focus-visible {
 
 .drawerButtons {
   flex: 0 0 auto;
-  padding: 12px 0 2px;
+  justify-content: center;
+  padding: 12px 12px;
   border-top: 1px solid var(--border);
   background: var(--surface);
 }

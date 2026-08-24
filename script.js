@@ -200,7 +200,21 @@ function renderRecommendation(recommendation) {
   const tooltip = getTooltipForRecommendation(recommendation);
   if (!tooltip) return `<br>- ${recommendation}`;
 
-  return `<br>- <span title="${tooltip.hint}">${tooltip.name} : ${tooltip.condition}</span>`;
+  return renderTooltip(tooltip);
+}
+
+function renderTooltip(tooltip) {
+  return `<div class="yakuRecommendation">
+    <strong>${tooltip.name}</strong>
+    <div>- Hint: ${tooltip.hint}</div>
+    <div>- Condition: ${tooltip.condition}</div>
+  </div>`;
+}
+
+function renderYakuReference() {
+  const referenceList = document.getElementById("yakuReferenceList");
+  if (!referenceList || !yakuTooltips.length) return;
+  referenceList.innerHTML = yakuTooltips.map(renderTooltip).join("");
 }
 
 // Parse input, calculate shanten, and render results
@@ -210,6 +224,11 @@ function analyzeHand() {
   const tilesArray = [];
   let hand;
   if (inputType === true) {
+    // Typed input replaces any hand that was built with tile buttons.
+    tileHand.length = 0;
+    createBtns("Remove", handContainer, tileHand);
+    refreshHandSummary();
+
     // Turn 123m into 1m 2m 3m
     hand = document.getElementById("handInput").value;
     for (const [_, numbers, suit] of hand.matchAll(/([1-9]+)([mpsz])/g)) {
@@ -275,9 +294,9 @@ function analyzeHand() {
     const listItems = handRecommendations.map(renderRecommendation).join("");
     //Set the output
     document.getElementById("output").innerHTML = `
-            <b>YAKU OPTIONS</b>
+            <b>YAKU OPTIONS</b><br>
              ${listItems} <br>
-              <br><b>SHANTEN:</b>
+            <b>SHANTEN:</b>
              ${statusMessage}`;
     //Set the Variables
     document.getElementById("VariableInfo").innerHTML =
@@ -394,6 +413,7 @@ function clearHand() {
   document.getElementById("handInput").value = "";
   document.getElementById("HandCheck").checked = false;
   refreshHandSummary();
+  setDrawerCollapsed(false);
   console.log("Hand Cleared");
 }
 
@@ -463,7 +483,10 @@ if (drawer && drawer.parentElement !== document.body) {
 function setDrawerCollapsed(isCollapsed) {
   if (!drawer || !toggleButton || !drawerContent) return;
   drawer.classList.toggle("collapsed", isCollapsed);
-  toggleButton.textContent = isCollapsed ? "Expand" : "Collapse";
+  const action = isCollapsed ? "Expand" : "Collapse";
+  toggleButton.textContent = isCollapsed ? "▲" : "▼";
+  toggleButton.setAttribute("aria-label", `${action} hand menu`);
+  toggleButton.title = `${action} hand menu`;
   toggleButton.setAttribute("aria-expanded", String(!isCollapsed));
 }
 
@@ -483,7 +506,6 @@ function fixOverlap() {
     tabPanels.forEach((panel) => {
       panel.style.marginBottom = drawerHeight;
     });
-    document.body.style.paddingBottom = drawerHeight;
   }
 }
 fixOverlap();
@@ -512,5 +534,6 @@ fetch("./yakuTooltips.json")
     yakuTooltips = riichiTooltip
       ? [...otherTooltips, riichiTooltip]
       : otherTooltips;
+    renderYakuReference();
   })
   .catch((error) => console.error(error));

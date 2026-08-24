@@ -7,13 +7,16 @@
     <title>Sarah's Riichi Yaku Builder</title>
   </head>
   <body>
-    <h2>RICHI MAHJOUNG BEGINNER CHEAT SHEET</h2>
+    <h2>RIICHI MAHJONG BEGINNER CHEAT SHEET</h2>
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'RichiYakuBuilder')">
-        Richi Yaku Builder
+        Riichi Yaku Builder
       </button>
       <button class="tablinks" onclick="openTab(event, 'BasicRules')">
         Basic Rules
+      </button>
+      <button class="tablinks" onclick="openTab(event, 'YakuReference')">
+        Yaku Reference
       </button>
     </div>
 
@@ -56,8 +59,10 @@
           type="button"
           aria-expanded="true"
           aria-controls="handDrawerContent"
+          aria-label="Collapse hand menu"
+          title="Collapse hand menu"
         >
-          Collapse
+          ▼
         </button>
       </div>
 
@@ -123,6 +128,12 @@
         https://www.reddit.com/r/Mahjong/comments/l5b221/riichi_mahjong_cheat_sheet_1_page_pdf_or_images/
       </p>
       <br />
+    </div>
+    <div id="YakuReference" class="tabcontent">
+      <h3>Yaku Reference</h3>
+      <div id="yakuReferenceList" class="yakuReferenceList">
+        <div class="empty-state">Loading yaku reference...</div>
+      </div>
     </div>
     <script src="./tabSystem.js"></script>
     <script src="./handHelpers.js"></script>
