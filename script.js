@@ -513,7 +513,9 @@ window.addEventListener("resize", fixOverlap);
 
 // Tooltip content is kept separate from application logic for easier editing.
 let yakuTooltips = [];
-fetch("./yakuTooltips.json")
+const yakuTooltipUrl = new URL("yakuTooltips.json", document.baseURI);
+
+fetch(yakuTooltipUrl)
   .then((response) => {
     if (!response.ok)
       throw new Error(`Unable to load tooltips: ${response.status}`);
@@ -536,4 +538,11 @@ fetch("./yakuTooltips.json")
       : otherTooltips;
     renderYakuReference();
   })
-  .catch((error) => console.error(error));
+  .catch((error) => {
+    console.error(error);
+    const referenceList = document.getElementById("yakuReferenceList");
+    if (referenceList) {
+      referenceList.innerHTML =
+        '<div class="empty-state">Unable to load yaku reference. Check that yakuTooltips.json is published with the site.</div>';
+    }
+  });
