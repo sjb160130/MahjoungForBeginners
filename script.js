@@ -38,7 +38,7 @@ const SUITS = ["m", "p", "s"];
 const DRAGONS = ["5z", "6z", "7z"];
 const WINDS = ["1z", "2z", "3z", "4z"];
 
-//Suggestion Pass
+// Build recommendations for the current hand
 function detectPotentialHands(tilesArray) {
   //Reset + Set Data
   openHand = document.getElementById("HandCheck").checked;
@@ -60,18 +60,19 @@ function detectPotentialHands(tilesArray) {
   checkConcealedTriplets();
   checkIipeikou(); // + Ryanpeikou
 
-  //Richi
+  checkClosedHand();
+
+  // Keep Riichi as the final recommendation in the results list.
   if (!openHand) {
     suggestions.push(
       "<b>CLOSED:</b> Riichi: Keep your hand completely closed, focus on standard 1-2-3 runs, and call Riichi once ready.",
     );
   }
-  checkClosedHand();
 
   return suggestions;
 }
 
-//Variable Management
+// Hand metrics and shanten calculation
 function resetVariables() {
   //Clear it
   document.getElementById("output").innerHTML = "";
@@ -91,7 +92,7 @@ function setVariables(tilesArray) {
   tilesArray.forEach((tile) => {
     counts[tile] = (counts[tile] || 0) + 1;
     const suit = tile[1];
-    const num = parseInt(tile[0]);
+    const num = Number(tile[0]);
     suits[suit]++;
 
     if (suit === "z") {
@@ -117,7 +118,7 @@ function setVariables(tilesArray) {
     z: Array(8).fill(0),
   };
   tilesArray.forEach((tile) => {
-    const num = parseInt(tile[0]);
+    const num = Number(tile[0]);
     const suit = tile[1];
     if (searchCounts[suit]) searchCounts[suit][num]++;
   });
@@ -165,19 +166,48 @@ function setVariables(tilesArray) {
   return shanten;
 }
 
-// Analyze hand
+// Match detector messages to the consistent labels stored in yakuTooltips.json.
+const tooltipAliases = [
+  ["Riichi", "Riichi"],
+  ["Pure Straight", "Iitsu"],
+  ["All Simples", "Tanyao"],
+  ["Dragon Value", "Yakuhai"],
+  ["Mixed Triple Sequence", "Sanshoku Doujun"],
+  ["Triple Triplets", "Sanshoku Doukou"],
+  ["All Triplets", "Toitoi"],
+  ["Four Quads", "Suukantsu"],
+  ["Three Quads", "Sankantsu"],
+  ["Four Concealed Triplets", "Suuankou"],
+  ["Three Concealed Triplets", "Sanankou"],
+  ["Seven Pairs", "Chiitoitsu"],
+  ["Half Flush", "Honitsu"],
+  ["Full Flush", "Chinitsu"],
+];
+
+function getTooltipForRecommendation(recommendation) {
+  const alias = tooltipAliases.find(([text]) => recommendation.includes(text));
+  const name = alias ? alias[1] : recommendation.split(" hint:")[0];
+  return (
+    yakuTooltips.find((tooltip) => tooltip.name.startsWith(`${name} (`)) ||
+    yakuTooltips.find((tooltip) =>
+      recommendation.includes(tooltip.name.split(" (")[0]),
+    )
+  );
+}
+
+function renderRecommendation(recommendation) {
+  const tooltip = getTooltipForRecommendation(recommendation);
+  if (!tooltip) return `<br>- ${recommendation}`;
+
+  return `<br>- <span title="${tooltip.hint}">${tooltip.name}</span>`;
+}
+
+// Parse input, calculate shanten, and render results
 function analyzeHand() {
-  //Check Close or not
-  if (window.matchMedia("(max-width: 700px)").matches) {
-    console.log("Checkmate");
-    document.getElementById("currentHand").classList.toggle("closed");
-  }
-  //Set Variables
+  // Read the selected input mode before parsing the hand.
   const inputType = document.getElementById("typeCheck").checked;
   const tilesArray = [];
   let hand;
-  let match;
-
   if (inputType === true) {
     // Turn 123m into 1m 2m 3m
     hand = document.getElementById("handInput").value;
@@ -187,7 +217,7 @@ function analyzeHand() {
       }
     }
   } else {
-    const hand = document.getElementById("handValueLabel").textContent;
+    hand = document.getElementById("handValueLabel").textContent;
     const tileMap = {
       man: "m",
       pin: "p",
@@ -234,10 +264,8 @@ function analyzeHand() {
         ? "Tenpai! Your hand is ready. You just need 1 tile to win.\n"
         : `${shanten}-Shanten. You are ${shanten + 1} tiles away from completing your structure.`;
 
-    // Map recommendations out to a bulleted list layout
-    const listItems = handRecommendations
-      .map((item) => `<br>- ${item}`)
-      .join("");
+    // Replace raw detector messages with the matching JSON tooltip label.
+    const listItems = handRecommendations.map(renderRecommendation).join("");
     //Set the output
     document.getElementById("output").innerHTML = `
             <b>YAKU OPTIONS</b>
@@ -254,14 +282,16 @@ function analyzeHand() {
            TotalPairs:${totalPairs}      Total Triplets:${totalTriplets}   Total Quads:${totalQuads}<br> 
            Terminal Count:${terminalCount}  HonorCount:${honorCount}<br>
            Shanten:${shanten}`;
+    document.getElementById("handSummaryText").textContent = hand;
+    document.getElementById("tileCount").textContent = tilesArray.length;
+    setDrawerCollapsed(true);
   } catch (err) {
     document.getElementById("output").innerHTML =
       "Calculation Error: " + err.message;
   }
 }
 
-//Button Creation---------------------------
-//Pull images
+// Tile image URLs and tile-picker rendering
 function pullImages(type) {
   let arrayLink = [];
   let string =
@@ -297,7 +327,6 @@ function createBtns(goal, container, array) {
     const img = document.createElement("img");
     let text = fileName.replace(".png?raw=true", "");
     let result = text.replace(/([a-zA-Z]+)(\d+)/, "$2$1"); // returns "1man"
-    let finalResult = result.slice(0, 2); // returns "1m"
     img.src = url;
     img.alt = fileName;
     btn.id = result;
@@ -314,10 +343,7 @@ function createBtns(goal, container, array) {
   });
 }
 createBtns("Add", btnContainer, imageLinks);
-//Button Creation---------------------------
-
-//Tap Tile Functionality---------------------------
-//Funciton onclick to add
+// Tile hand editing actions
 function addTileString(tile) {
   let dupCheck = ValidateSingleTileMax(tileHand, tile);
   if (tileHand.length < 13 && !dupCheck) {
@@ -435,36 +461,67 @@ function SortHand() {
   document.getElementById("tileCount").textContent = formattedArray.length;
 }
 
-//Tap Tile Functionality---------------------------
-
-//Bottom Container
+// Optional hand drawer controls
 const hand = document.getElementById("currentHand");
 const toggleButton = document.getElementById("toggleHand");
-toggleButton.onclick = () => {
-  hand.classList.toggle("closed");
-  toggleButton.textContent = !hand.classList.contains("closed") ? "▼" : "▲";
-};
+const drawer = document.getElementById("handDrawer");
+const drawerContent = document.getElementById("handDrawerContent");
+
+// Keep the drawer outside tab panels so it is always positioned against the viewport.
+if (drawer && drawer.parentElement !== document.body) {
+  document.body.appendChild(drawer);
+}
+
+function setDrawerCollapsed(isCollapsed) {
+  if (!drawer || !toggleButton || !drawerContent) return;
+  drawer.classList.toggle("collapsed", isCollapsed);
+  toggleButton.textContent = isCollapsed ? "Expand" : "Collapse";
+  toggleButton.setAttribute("aria-expanded", String(!isCollapsed));
+}
+
+if (toggleButton) {
+  toggleButton.addEventListener("click", () => {
+    setDrawerCollapsed(!drawer.classList.contains("collapsed"));
+  });
+}
 
 const floatingDiv = document.querySelector(".handDrawer");
-const textWrapper = document.querySelector(".tabcontent");
+const tabPanels = document.querySelectorAll(".tabcontent");
 
-// Create a reusable function to update the spacing
+// Reserve space in every tab for the fixed drawer when it is open.
 function fixOverlap() {
-  textWrapper.style.marginBottom = floatingDiv.offsetHeight + "px";
+  if (floatingDiv) {
+    const drawerHeight = `${floatingDiv.offsetHeight}px`;
+    tabPanels.forEach((panel) => {
+      panel.style.marginBottom = drawerHeight;
+    });
+    document.body.style.paddingBottom = drawerHeight;
+  }
 }
-// Run it immediately on page load
 fixOverlap();
-// Optional: Run it on window resize if the div changes size on mobile
 window.addEventListener("resize", fixOverlap);
 
 // Tooltip content is kept separate from application logic for easier editing.
 let yakuTooltips = [];
 fetch("./yakuTooltips.json")
   .then((response) => {
-    if (!response.ok) throw new Error(`Unable to load tooltips: ${response.status}`);
+    if (!response.ok)
+      throw new Error(`Unable to load tooltips: ${response.status}`);
     return response.json();
   })
   .then((tooltips) => {
-    yakuTooltips = tooltips;
+    const formattedTooltips = tooltips.map(({ name, condition, hint }) => ({
+      name: `${name} (${condition})`,
+      hint,
+    }));
+    const riichiTooltip = formattedTooltips.find((tooltip) =>
+      tooltip.name.startsWith("Riichi ("),
+    );
+    const otherTooltips = formattedTooltips.filter(
+      (tooltip) => tooltip !== riichiTooltip,
+    );
+    yakuTooltips = riichiTooltip
+      ? [...otherTooltips, riichiTooltip]
+      : otherTooltips;
   })
   .catch((error) => console.error(error));

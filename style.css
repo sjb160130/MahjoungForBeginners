@@ -90,10 +90,81 @@
   background: #ddd;
 }
 
+.drawerToggle {
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
 .drawerTitle {
   font-size: 18px;
   font-weight: bold;
   white-space: nowrap;
+}
+
+.drawerHandSummary {
+  flex: 1;
+  min-width: 0;
+}
+
+.handSummary {
+  min-width: 0;
+  grid-template-columns: repeat(auto-fit, minmax(32px, 40px));
+  margin-top: 6px;
+}
+
+.handSummary .img-btn {
+  width: 40px;
+  height: 48px;
+  padding: 0;
+}
+
+.handSummary .img-btn img {
+  display: block;
+  height: 100%;
+}
+
+.handSummaryText {
+  overflow-wrap: anywhere;
+  font-family: monospace;
+}
+
+.handDrawerContent {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 10px 12px 14px;
+}
+
+.handDrawer.collapsed .handDrawerContent {
+  display: none;
+}
+
+/* Desktop keeps the input drawer open; collapsing is a mobile behavior. */
+@media (min-width: 701px) {
+  .drawerToggle {
+    display: none;
+  }
+
+  .handDrawer.collapsed .handDrawerContent {
+    display: block;
+  }
+}
+
+.drawerOptions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.input-group {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.input-group input[type="text"] {
+  width: min(100%, 360px);
+  padding: 8px;
 }
 
 .drawerButtons {
@@ -118,6 +189,15 @@
   .handDrawerHeader {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .handSummary {
+    width: 100%;
+    margin: 6px 0 0;
+  }
+
+  .handSummaryText {
+    text-align: center;
   }
 
   .drawerTitle {

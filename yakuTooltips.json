@@ -153,5 +153,10 @@
     "name": "Pinfu (All Sequences)",
     "condition": "Closed hand made mostly of sequences with no value pair, no triplets, and a two-sided wait at completion.",
     "hint": "Keep flexible connected tiles, avoid Pon, and prioritize sequence-building over triplets."
+  },
+  {
+    "name": "Riichi",
+    "condition": "A closed hand that can declare Riichi when it reaches tenpai.",
+    "hint": "Keep your hand completely closed, focus on standard 1-2-3 runs, and declare Riichi once ready."
   }
 ]

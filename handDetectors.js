@@ -28,13 +28,25 @@ function checkIitsu() {
   for (let suit of SUITS) {
     let runs = { 123: false, 456: false, 789: false };
 
-    if (counts["1" + suit] > 0 && counts["2" + suit] > 0 && counts["3" + suit] > 0) {
+    if (
+      counts["1" + suit] > 0 &&
+      counts["2" + suit] > 0 &&
+      counts["3" + suit] > 0
+    ) {
       runs["123"] = true;
     }
-    if (counts["4" + suit] > 0 && counts["5" + suit] > 0 && counts["6" + suit] > 0) {
+    if (
+      counts["4" + suit] > 0 &&
+      counts["5" + suit] > 0 &&
+      counts["6" + suit] > 0
+    ) {
       runs["456"] = true;
     }
-    if (counts["7" + suit] > 0 && counts["8" + suit] > 0 && counts["9" + suit] > 0) {
+    if (
+      counts["7" + suit] > 0 &&
+      counts["8" + suit] > 0 &&
+      counts["9" + suit] > 0
+    ) {
       runs["789"] = true;
     }
 
@@ -85,7 +97,16 @@ function checkRyuuiisou() {
 }
 
 function checkKokushiMusou() {
-  const kokushiTiles = ["1m", "9m", "1p", "9p", "1s", "9s", ...WINDS, ...DRAGONS];
+  const kokushiTiles = [
+    "1m",
+    "9m",
+    "1p",
+    "9p",
+    "1s",
+    "9s",
+    ...WINDS,
+    ...DRAGONS,
+  ];
   let uniqueTiles = countUniqueTiles(kokushiTiles);
   let hasPair = kokushiTiles.some((tile) => counts[tile] >= 2);
 
@@ -288,14 +309,18 @@ function checkYakuhaiPlus() {
   const winds = countSets(WINDS);
 
   if (dragons.triplets === 3) {
-    suggestions.push("Big Three Dragons (Daisangen): You have all three dragon triplets!");
+    suggestions.push(
+      "Big Three Dragons (Daisangen): You have all three dragon triplets!",
+    );
   } else if (dragons.triplets === 2 && dragons.pairs === 1) {
     suggestions.push(
       "Little Three Dragons (Shousangen): Keep your dragon pair to complete the third triplet.",
     );
   }
   if (winds.triplets === 4) {
-    suggestions.push("Big Four Winds (Daisuushi): You have all four wind triplets!");
+    suggestions.push(
+      "Big Four Winds (Daisuushi): You have all four wind triplets!",
+    );
   } else if (winds.triplets === 3 && winds.pairs === 1) {
     suggestions.push(
       "Little Four Winds (Shousuushi): Keep your wind pair to complete the fourth triplet.",

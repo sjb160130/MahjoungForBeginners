@@ -27,5 +27,11 @@ function toggleVisibility(isVisible, targetElement) {
 const typeToggle = document.getElementById("typeCheck");
 const typeInput = document.getElementById("typeTab");
 const tileInput = document.getElementById("tapTab");
-typeInput.style.display = "none";
-tileInput.style.display = "block";
+
+function updateInputMode() {
+  typeInput.style.display = typeToggle.checked ? "block" : "none";
+  tileInput.style.display = typeToggle.checked ? "none" : "block";
+}
+
+typeToggle.addEventListener("change", updateInputMode);
+updateInputMode();

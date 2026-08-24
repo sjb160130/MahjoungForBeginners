@@ -24,81 +24,6 @@
           Shows you most possible hands that you are close to buildling and give
           pointers on how.
           <br />
-
-          <div>
-            <div class="input-group">
-              <div id="typeTab">
-                <br />
-                Type to Input Hand
-                <br />
-                <input
-                  type="text"
-                  id="handInput"
-                  placeholder="e.g., 1122334455667s"
-                  value="1122334455667s"
-                />
-                <p>
-                  Suited Tiles: m = Manzu,s = Souzu, p = Pinzu
-                  <br />
-                  Winds: 1z = East, 2z = South, 4z = West, 5z = North
-                  <br />
-                  Dragons:5z - 7z, 5z = White, 6z = Green, 7z = Red
-                  <br />
-                  Sample Hand: 1234m555s9672p57z or 1122334455667s
-                </p>
-              </div>
-            </div>
-
-            <div id="tapTab">
-              <div class="handContainer" id="handHolder">
-                Hand:
-                <label id="handValueLabel">Hand Value</label>
-                <div
-                  id="handTileHere"
-                  class="button-container handHolder"
-                ></div>
-                <div id="currentHand" class="handContainer handHolder">
-                  Tap Tiles to Input Hand
-                  <div id="button-container" class="button-container"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <br />
-          <div class="handDrawerHeader">
-            <div class="drawerTitle">
-              🀄 Current Hand (
-              <span id="tileCount">0</span>
-              /13)
-            </div>
-            <div class="drawerButtons">
-              <input
-                type="checkbox"
-                id="HandCheck"
-                name="HandCheck"
-                value="False"
-              />
-              Open Hand?
-              <input
-                type="checkbox"
-                id="typeCheck"
-                name="typeCheck"
-                value="False"
-              />
-              Input by typing
-              <button
-                id="analyzeBtn"
-                onclick="openTab(event, 'RichiYakuBuilder')"
-              >
-                Analyze Hand
-              </button>
-              <button id="sort">Sort</button>
-              <button id="clearHand">Clear</button>
-              <button id="backspaceBtn">Backspace</button>
-            </div>
-          </div>
-          <br />
-          <label for="handInput">Enter Your 13-Tile Hand</label>
         </div>
 
         <div class="card-body">
@@ -115,6 +40,73 @@
         </div>
       </div>
     </div>
+    <section class="handDrawer" id="handDrawer" aria-label="Hand input menu">
+      <div class="handDrawerHeader">
+        <div class="drawerHandSummary">
+          <div class="drawerTitle">
+            Current Hand (<span id="tileCount">0</span>/13)
+          </div>
+          <span id="handSummaryText" class="handSummaryText"
+            >No tiles selected</span
+          >
+          <div id="handTileHere" class="button-container handSummary"></div>
+        </div>
+        <button
+          id="toggleHand"
+          class="drawerToggle"
+          type="button"
+          aria-expanded="true"
+          aria-controls="handDrawerContent"
+        >
+          Collapse
+        </button>
+      </div>
+
+      <div id="handDrawerContent" class="handDrawerContent">
+        <div class="drawerOptions">
+          <label>
+            <input type="checkbox" id="HandCheck" name="HandCheck" />
+            Open Hand
+          </label>
+          <label>
+            <input type="checkbox" id="typeCheck" name="typeCheck" />
+            Input by typing
+          </label>
+        </div>
+
+        <div id="typeTab" class="input-group">
+          <label for="handInput">Type Your Hand</label>
+          <input
+            type="text"
+            id="handInput"
+            placeholder="e.g., 1122334455667s"
+            value="1122334455667s"
+          />
+          <p>
+            Suits: m = Manzu, s = Souzu, p = Pinzu<br />
+            Winds: 1z = East, 2z = South, 3z = West, 4z = North<br />
+            Dragons: 5z = White, 6z = Green, 7z = Red
+          </p>
+        </div>
+
+        <div id="tapTab">
+          <div class="handContainer" id="handHolder">
+            <label id="handValueLabel">Hand Value</label>
+            <div id="currentHand" class="handContainer handHolder">
+              Tap tiles to build your hand
+              <div id="button-container" class="button-container"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="drawerButtons">
+          <button id="analyzeBtn" type="button">Analyze Hand</button>
+          <button id="sort" type="button">Sort</button>
+          <button id="clearHand" type="button">Clear</button>
+          <button id="backspaceBtn" type="button">Backspace</button>
+        </div>
+      </div>
+    </section>
     <div id="BasicRules" class="tabcontent">
       <img
         src="https://files.catbox.moe/f7ez3a.webp"
@@ -126,18 +118,12 @@
         style="width: 100%"
         alt="Riichi mahjong yaku reference sheet"
       />
-      <img
-        src="https://files.catbox.moe/e4ve4a.jpg"
-        style="width: 100%"
-        alt="Riichi mahjong rules reference"
-      />
       <p>
         Ref Sources:
         <br />
-        https://www.reddit.com/r/Mahjong/comments/l5b221/riichi_mahjong_cheat_sheet_1_page_pdf_or_images/
-        <br />
         https://boardgamegeek.com/image/5957879/riichi-mahjong and
-        https://peterish.com/portfolio/general-riichi-designs/
+        <br />
+        https://www.reddit.com/r/Mahjong/comments/l5b221/riichi_mahjong_cheat_sheet_1_page_pdf_or_images/
       </p>
       <br />
     </div>
