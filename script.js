@@ -217,7 +217,13 @@ function analyzeHand() {
       }
     }
   } else {
-    hand = document.getElementById("handValueLabel").textContent;
+    hand = tileHand
+      .map((fileName) =>
+        fileName
+          .substring(fileName.lastIndexOf("/") + 1)
+          .replace(".png?raw=true", ""),
+      )
+      .join(",");
     const tileMap = {
       man: "m",
       pin: "p",
@@ -344,19 +350,26 @@ function createBtns(goal, container, array) {
 }
 createBtns("Add", btnContainer, imageLinks);
 // Tile hand editing actions
+function refreshHandSummary() {
+  const formattedArray = tileHand.map((fileName) =>
+    fileName
+      .substring(fileName.lastIndexOf("/") + 1)
+      .replace(".png?raw=true", ""),
+  );
+  const handText = formattedArray.length
+    ? formattedArray.join(",")
+    : "No tiles selected";
+
+  document.getElementById("handSummaryText").textContent = handText;
+  document.getElementById("tileCount").textContent = formattedArray.length;
+}
+
 function addTileString(tile) {
   let dupCheck = ValidateSingleTileMax(tileHand, tile);
   if (tileHand.length < 13 && !dupCheck) {
     tileHand.push(tile);
-    const formattedArray = tileHand.map((fileName) => {
-      let text = fileName
-        .substring(fileName.lastIndexOf("/") + 1)
-        .replace(".png?raw=true", "");
-      return text;
-    });
-    document.getElementById("handValueLabel").innerHTML = formattedArray.join();
     createBtns("Remove", handContainer, tileHand);
-    document.getElementById("tileCount").textContent = formattedArray.length;
+    refreshHandSummary();
   }
 }
 
@@ -364,40 +377,20 @@ function addTileString(tile) {
 function removeLastTile() {
   tileHand.pop();
   createBtns("Remove", handContainer, tileHand);
-  const formattedArray = tileHand.map((fileName) => {
-    let text = fileName
-      .substring(fileName.lastIndexOf("/") + 1)
-      .replace(".png?raw=true", "");
-    return text;
-  });
-  document.getElementById("handValueLabel").innerHTML = formattedArray;
-  document.getElementById("tileCount").textContent = formattedArray.length;
+  refreshHandSummary();
 }
 
 function removeClickedTile(index) {
   tileHand.splice(index, 1);
   createBtns("Remove", handContainer, tileHand);
-  const formattedArray = tileHand.map((fileName) => {
-    let text = fileName
-      .substring(fileName.lastIndexOf("/") + 1)
-      .replace(".png?raw=true", "");
-    return text;
-  });
-  document.getElementById("handValueLabel").innerHTML = formattedArray;
-  document.getElementById("tileCount").textContent = formattedArray.length;
+  refreshHandSummary();
 }
 
 function clearHand() {
   tileHand.length = 0;
   createBtns("Remove", handContainer, tileHand);
-  const formattedArray = tileHand.map((fileName) => {
-    let text = fileName
-      .substring(fileName.lastIndexOf("/") + 1)
-      .replace(".png?raw=true", "");
-    return text;
-  });
-  document.getElementById("handValueLabel").innerHTML = formattedArray;
-  document.getElementById("tileCount").textContent = formattedArray.length;
+  document.getElementById("handInput").value = "";
+  refreshHandSummary();
   console.log("Hand Cleared");
 }
 
@@ -450,15 +443,7 @@ function SortHand() {
 
   // 3. Update UI elements with the freshly mutated global state array
   createBtns("Remove", handContainer, tileHand);
-  const formattedArray = tileHand.map((fileName) => {
-    let text = fileName
-      .substring(fileName.lastIndexOf("/") + 1)
-      .replace(".png?raw=true", "");
-    return text;
-  });
-  document.getElementById("handValueLabel").innerHTML =
-    formattedArray.join(", ");
-  document.getElementById("tileCount").textContent = formattedArray.length;
+  refreshHandSummary();
 }
 
 // Optional hand drawer controls

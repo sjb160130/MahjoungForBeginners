@@ -244,7 +244,7 @@ function checkSanshokuDoujun() {
 }
 
 function checkToitoi() {
-  if (totalTriplets >= 3 || totalPairs >= 4) {
+  if (totalTriplets >= 3 || totalPairs >= 3) {
     suggestions.push(
       "All Triplets (Toitoi): Strongly viable. Look to open your hand using 'Pon' when tiles match.",
     );
